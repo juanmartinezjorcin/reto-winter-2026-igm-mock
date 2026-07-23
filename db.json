@@ -1,0 +1,200 @@
+{
+  "stations": [  
+    {
+      "id": "0e8076d5-7a7e-44ba-93da-bf6041b00d21",
+      "code": "UYTD",
+      "name": "Termas del Dayman",
+      "location": {"type": "Point", "coordinates": [-57.52, -30.95]},
+      "effective_status": "operational",
+      "status_since": "2026-07-21T18:10:00Z",
+      "last_observed_at": "2026-07-21T18:24:15Z",
+      "monthly_uptime": 99.5,
+      "status_events": [
+        {
+          "timestamp": "2026-07-21T10:00:00Z",
+          "status": "operational",
+          "reason": "Sistema funcionando normalmente"
+        },
+        {
+          "timestamp": "2026-07-20T14:30:00Z",
+          "status": "degraded",
+          "reason": "Latencia aumentada en conexión"
+        },
+        {
+          "timestamp": "2026-07-20T15:00:00Z",
+          "status": "operational",
+          "reason": "Latencia normalizada"
+        }
+      ]
+    },
+    {
+      "id": "9b9e25d4-1b8c-4c0a-a6cf-7d60cb4d52b",
+      "code": "UYMO",
+      "name": "Montevideo",
+      "location": { "type": "Point", "coordinates": [-56.2599, -34.8883] },
+      "effective_status": "operational",
+      "status_since": "2026-07-21T18:10:00Z",
+      "last_observed_at": "2026-07-21T18:24:15Z",
+      "monthly_uptime": 98.8,
+      "status_events": [
+        {
+          "timestamp": "2026-07-21T08:15:00Z",
+          "status": "operational",
+          "reason": "Sistema en funcionamiento"
+        },
+        {
+          "timestamp": "2026-07-19T09:00:00Z",
+          "status": "outage",
+          "reason": "Falla en la conexión principal"
+        },
+        {
+          "timestamp": "2026-07-19T10:30:00Z",
+          "status": "operational",
+          "reason": "Conexión restaurada"
+        }
+      ]
+    }   
+  ],
+  "mountpoints": [
+    {
+      "id": "2",
+      "station_id": "0e8076d5-7a7e-44ba-93da-bf6041b00d21",
+      "is_primary": true,
+      "limit": 100,
+      "review_status": "approved",
+      "reviews": []
+    },
+    {
+      "id": "1",
+      "station_id": "9b9e25d4-1b8c-4c0a-a6cf-7d60cb4d52b",
+      "is_primary": true,
+      "review_status": "approved",
+      "reviews": []
+    }
+  ],
+  "maintenances": [
+    {
+    "id": "1",
+    "station_id": "0e8076d5-7a7e-44ba-93da-bf6041b00d21",
+    "starts_at": "2026-07-22T13:00:00Z",
+    "ends_at": "2026-07-22T15:00:00Z",
+    "reason": "Cambio preventivo de antena",
+    "notes": "Coordinado con el responsable local"
+    },
+    {
+    "id": "2",
+    "station_id": "9b9e25d4-1b8c-4c0a-a6cf-7d60cb4d52b",
+    "starts_at": "2026-07-22T13:00:00Z",
+    "ends_at": "2026-07-22T15:00:00Z",
+    "reason": "Mantenimiento preventivo",
+    "notes": "Realizado por el equipo técnico"
+    }
+  ],
+  "users": [
+  {
+    "id": "1",
+    "email": "admin@example.com",
+    "role": "admin",
+    "token": "admin-token",
+    "alert_subscriptions": [
+      {
+        "station_id": "9b9e25d4-1b8c-4c0a-a6cf-7d60cb4d52b",
+        "notify_degraded": true,
+        "notify_outage": true,
+        "notify_recovery": true,
+        "is_active": true
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "email": "user@example.com",
+    "role": "usuario",
+    "token": "user-token",
+    "alert_subscriptions": [
+      {
+        "station_id": "9b9e25d4-1b8c-4c0a-a6cf-7d60cb4d52b",
+        "notify_degraded": true,
+        "notify_outage": true,
+        "notify_recovery": true,
+        "is_active": true
+      },
+      {
+        "station_id": "0e8076d5-7a7e-44ba-93da-bf6041b00d21",
+        "notify_degraded": true,
+        "notify_outage": true,
+        "notify_recovery": true,
+        "is_active": true
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "email": "technician@example.com",
+    "role": "tecnico",
+    "token": "technician-token",
+    "alert_subscriptions": [
+      {
+        "station_id": "0e8076d5-7a7e-44ba-93da-bf6041b00d21",
+        "notify_degraded": true,
+        "notify_outage": true,
+        "notify_recovery": true,
+        "is_active": true
+      }
+    ]
+  }
+  ],
+  "email_deliveries": [
+    {
+      "id": "email-1",
+      "station_id": "0e8076d5-7a7e-44ba-93da-bf6041b00d21",
+      "status": "delivered",
+      "from": "alerts@igm.local",
+      "to": "admin@example.com",
+      "subject": "Estado operativo confirmado",
+      "sent_at": "2026-07-22T10:00:00Z",
+      "delivered_at": "2026-07-22T10:00:04Z"
+    },
+    {
+      "id": "email-2",
+      "station_id": "0e8076d5-7a7e-44ba-93da-bf6041b00d21",
+      "status": "failed",
+      "from": "alerts@igm.local",
+      "to": "user@example.com",
+      "subject": "Alerta de degradación",
+      "sent_at": "2026-07-22T11:15:00Z",
+      "delivered_at": null
+    },
+    {
+      "id": "email-3",
+      "station_id": "9b9e25d4-1b8c-4c0a-a6cf-7d60cb4d52b",
+      "status": "pending",
+      "from": "alerts@igm.local",
+      "to": "technician@example.com",
+      "subject": "Revisión pendiente de Montevideo",
+      "sent_at": "2026-07-22T12:30:00Z",
+      "delivered_at": null
+    },
+    {
+      "id": "email-4",
+      "station_id": "9b9e25d4-1b8c-4c0a-a6cf-7d60cb4d52b",
+      "status": "delivered",
+      "from": "maintenances@igm.local",
+      "to": "admin@example.com",
+      "subject": "Mantenimiento programado",
+      "sent_at": "2026-07-22T13:00:00Z",
+      "delivered_at": "2026-07-22T13:00:09Z"
+    },
+    {
+      "id": "email-5",
+      "station_id": "0e8076d5-7a7e-44ba-93da-bf6041b00d21",
+      "status": "delivered",
+      "from": "alerts@igm.local",
+      "to": "technician@example.com",
+      "subject": "Recuperación de servicio",
+      "sent_at": "2026-07-22T14:20:00Z",
+      "delivered_at": "2026-07-22T14:20:03Z"
+    }
+  ]
+   
+}
