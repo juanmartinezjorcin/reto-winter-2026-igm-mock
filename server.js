@@ -916,14 +916,13 @@ app.put("/api/v1/me/alert-subscriptions/:station_id", (req, res) => {
 });
 
 app.delete("/api/v1/me/alert-subscriptions/:station_id", (req, res) => {
-    const db = readDb();
+    const auth = requireMockAuth(req, res);
 
-    const user = requireMockAuth(req, res);
-
-    if (!user) {
+    if (!auth) {
         return;
     }
 
+    const { db, user } = auth;
     const { station_id } = req.params;
 
     const station = db.stations.find((s) => s.id === station_id);
@@ -944,17 +943,26 @@ app.delete("/api/v1/me/alert-subscriptions/:station_id", (req, res) => {
         });
     }
 
-    db.users[userIndex].alert_subscriptions = db.users[userIndex].alert_subscriptions.filter((s) => s.station_id !== station_id);
+    db.users[userIndex].alert_subscriptions =
+        db.users[userIndex].alert_subscriptions.filter(
+            (subscription) => subscription.station_id !== station_id
+        );
 
     fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
 
     res.status(200).json({
-        subscriptions: db.users[userIndex].alert_subscriptions,
+        subscriptions: db.users[userIndex].alert_subscriptions
     });
 });
 
 app.get("/api/v1/users", (req, res) => {
     const db = readDb();
+
+    const auth = requireMockAuth(req, res, ["admin"]);
+
+    if (!auth) {
+        return;
+    }
 
     listUsers = db.users.map((user) => {
         return {
@@ -970,22 +978,26 @@ app.get("/api/v1/users", (req, res) => {
 });
 
 app.patch("/api/v1/users/:user_id", (req, res) => {
+    const auth = requireMockAuth(req, res, ["admin"]);
+
+    if (!auth) {
+        return;
+    }
+
+    const { db } = auth;
     const { user_id } = req.params;
+    const { role } = req.body;
 
-    const db = readDb();
+    const allowedRoles = ["admin", "usuario", "tecnico"];
 
-    const user = requireMockAuth(req, res);
-
-    adminUser = db.users.find((u) => u.id === user.id);
-
-    if (!adminUser || adminUser.role !== "admin") {
-        return res.status(403).json({
+    if (!role || !allowedRoles.includes(role)) {
+        return res.status(422).json({
             type: "ProblemDetails",
-            detail: "Access denied"
+            detail: "Role must be admin, usuario or tecnico"
         });
     }
 
-    updateUser = db.users.find((u) => u.id === user_id);
+    const updateUser = db.users.find((u) => u.id === user_id);
 
     if (!updateUser) {
         return res.status(404).json({
@@ -994,11 +1006,15 @@ app.patch("/api/v1/users/:user_id", (req, res) => {
         });
     }
 
-    updateUser.role = req.body.role || updateUser.role;
+    updateUser.role = role;
 
     fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
 
-    res.status(200).json(updateUser);
+    res.status(200).json({
+        id: updateUser.id,
+        email: updateUser.email,
+        role: updateUser.role
+    });
 });
 
 app.get("/api/v1/email-deliveries", (req, res) => {
